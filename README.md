@@ -1,3 +1,8 @@
+Consumer Sustainability Analytics - Central IoT Server
+===========
+
+### Contributing
+
 ##### Setting up Django for local development
 ```
 wget https://bootstrap.pypa.io/get-pip.py
