@@ -1,5 +1,10 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from tastypie.api import Api
+from dashboard.api import SensorDataResource
+
+csa_api_v1 = Api(api_name='v1')
+csa_api_v1.register(SensorDataResource())
 
 urlpatterns = patterns('',
     # Examples:
@@ -7,5 +12,6 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
    url(r'^admin/', include(admin.site.urls)),
+   url(r'^api/', include(csa_api_v1.urls)),
    url(r'^$', include('dashboard.urls')),
 )
