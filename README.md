@@ -29,6 +29,10 @@ python manage.py createsuperuser
 https://docs.djangoproject.com/en/1.7/internals/contributing/writing-code/coding-style/
 - Use underscores, not camelCase, for variable, function and method names (i.e. poll.get_unique_voters(), not poll.getUniqueVoters)
 
+##### Coding style
+POSTing data
+- curl -v -H "Content-Type: application/json" --data '{"entry\_date":"1", "sensor\_location":"here"}' localhost:11000/api/v1/entry/ 
+
 ##### TODO
 - hardcoded {{ STATIC_URL }} in...
   - plugins/freeboard/freeboard.widgets.js
