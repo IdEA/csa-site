@@ -2243,7 +2243,7 @@ ul.datasource-input-suffix {
 	height: 30px;
 	-webkit-appearance: none;
 	border: 1px solid #3d3d3d;
-	background: url(../../../img/dropdown-arrow.png) no-repeat right #272727;
+	background: url(../../../static/dashboard/img/dropdown-arrow.png) no-repeat right #272727;
 }
 
 .title {

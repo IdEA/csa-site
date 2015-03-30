@@ -33,5 +33,8 @@ https://docs.djangoproject.com/en/1.7/internals/contributing/writing-code/coding
 - hardcoded {{ STATIC_URL }} in...
   - plugins/freeboard/freeboard.widgets.js
     - plugin for sparkline 
+  - css/freeboard.css
+    - line 2246, img/dropdown-arrow.png
   - lib/css/freeboard/styles.css
-    - line 1051, 1075 img/glyphicons...
+    - line 1051, 1075, img/glyphicons
+    - line 1896, img/dropdown-arrow.png
