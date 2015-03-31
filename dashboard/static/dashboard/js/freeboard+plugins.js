@@ -3746,7 +3746,7 @@ $.extend(freeboard, jQuery.eventEmitter);
         type_name: "text_widget",
         display_name: "Text",
         "external_scripts" : [
-            "static/dashboard/plugins/thirdparty/jquery.sparkline.min.js"
+            "/static/dashboard/plugins/thirdparty/jquery.sparkline.min.js"
         ],
         settings: [
             {
@@ -3868,8 +3868,8 @@ $.extend(freeboard, jQuery.eventEmitter);
         type_name: "gauge",
         display_name: "Gauge",
         "external_scripts" : [
-            "static/dashboard/plugins/thirdparty/raphael.2.1.0.min.js",
-            "static/dashboard/plugins/thirdparty/justgage.1.0.1.js"
+            "/static/dashboard/plugins/thirdparty/raphael.2.1.0.min.js",
+            "/static/dashboard/plugins/thirdparty/justgage.1.0.1.js"
         ],
         settings: [
             {
@@ -3959,7 +3959,7 @@ $.extend(freeboard, jQuery.eventEmitter);
         type_name: "sparkline",
         display_name: "Sparkline",
         "external_scripts" : [
-            "static/dashboard/plugins/thirdparty/jquery.sparkline.min.js"
+            "/static/dashboard/plugins/thirdparty/jquery.sparkline.min.js"
         ],
         settings: [
             {
@@ -4070,7 +4070,7 @@ $.extend(freeboard, jQuery.eventEmitter);
         type_name: "pointer",
         display_name: "Pointer",
         "external_scripts" : [
-            "static/dashboard/plugins/thirdparty/raphael.2.1.0.min.js"
+            "/static/dashboard/plugins/thirdparty/raphael.2.1.0.min.js"
         ],
         settings: [
             {
