@@ -1,11 +1,12 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from tastypie.api import Api
-from dashboard.api import SensorDataResource
+from dashboard.api import SensorDataResource, StatisticsResource
 from csasite.views import MainView
 
 csa_api_v1 = Api(api_name='v1')
 csa_api_v1.register(SensorDataResource())
+csa_api_v1.register(StatisticsResource())
 
 urlpatterns = patterns('',
     # Examples:

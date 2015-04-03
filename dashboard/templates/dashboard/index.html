@@ -25,7 +25,11 @@ head.js("{{ STATIC_URL }}dashboard/js/freeboard+plugins.min.js",
                                 });
                             });
                         }
-
+                        $.getJSON("{{ STATIC_URL }}dashboard/csa_dash.json", function(data) {
+                          freeboard.loadDashboard(data, function() {
+                            freeboard.setEditing(false);
+                          });
+                        });
                     });
                 });
     </script>
