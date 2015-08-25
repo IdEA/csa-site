@@ -18,7 +18,7 @@ class mqttThread(threading.Thread):
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
         self.client.username_pw_set("CSA_TEST", "CSA_TEST")
-        self.client.connect("localhost", 12001, 60)
+        self.client.connect("stevenhuang.ca", 12001, 60)
         self.client.publish("/test", "csa-site client mqtt connected")
         self.pulls = 0
 
@@ -42,11 +42,12 @@ class mqttThread(threading.Thread):
         f=""
         topics = msg.topic.split("/")
         try:
-            if topics[0] == "dispensors":
-                if topics[2] == "pull":
+            # msg from a module
+            if topics[0] == "dispensors" and len(topics) == 2:
+                if msg.payload == "pull":
                     print("Detected pull from %s" % topics[1])
                     print(topics)
-                    ff = SensorData.create("washroom")
+                    ff = SensorData.create(topics[1])
                     ff.save()
                     self.pulls += 1
             # TODO: authorize this
