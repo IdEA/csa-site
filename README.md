@@ -10,8 +10,9 @@ sudo python get-pip.py
 sudo pip install Django
 ```
 
-##### Starting the dev web server
+##### Starting the dev server
 ```
+mosquitto -p 12001
 python manage.py runserver 0.0.0.0:11000
 ```
 

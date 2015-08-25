@@ -8,3 +8,9 @@ class SensorData(models.Model):
 
 	def save(self, *args, **kwargs):
 		super(SensorData, self).save(*args, **kwargs)
+
+	@classmethod
+	def create(self, loc="undefined", date="undefined"):
+		sensordata = self(sensor_location=loc)
+
+		return sensordata

@@ -6,6 +6,65 @@ from tastypie.authorization import Authorization
 from tastypie.authentication import BasicAuthentication
 from dashboard.models import SensorData
 
+import paho.mqtt.client as mqtt
+import threading
+
+class mqttThread(threading.Thread):
+    def __init__(self, threadID, client):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+
+        self.client = client
+        self.client.on_connect = self.on_connect
+        self.client.on_message = self.on_message
+        self.client.username_pw_set("CSA_TEST", "CSA_TEST")
+        self.client.connect("localhost", 12001, 60)
+        self.client.publish("/test", "csa-site client mqtt connected")
+        self.pulls = 0
+
+    def run(self):
+        print("MQTT Thread starting...")
+        self.client.loop_start()
+        """
+        while True:
+            prin("ay")
+            self.client.loop()
+        """
+
+    def on_connect(self, client, userdata, flags, rc):
+        print("Connected with result code "+str(rc))
+        #self.client.subscribe("$SYS/#")
+        # Subscribe to everything
+        self.client.subscribe("#")
+
+    # The callback for when a PUBLISH message is received from the server.
+    def on_message(self, client, userdata, msg):
+        f=""
+        topics = msg.topic.split("/")
+        try:
+            if topics[0] == "dispensors":
+                if topics[2] == "pull":
+                    print("Detected pull from %s" % topics[1])
+                    print(topics)
+                    ff = SensorData.create("washroom")
+                    ff.save()
+                    self.pulls += 1
+            # TODO: authorize this
+            elif topics[0] == "action":
+                if topics[1] == "delete":
+                    if topics[2] == "entries":
+                        print("Deleting all entries")
+                        SensorData.objects.all().delete()
+        except IndexError:
+            print("Index error... ignoring")
+
+
+        print(msg.topic+" "+str(msg.payload))
+
+client = mqtt.Client()
+mqttClientThread = mqttThread(1, client)
+mqttClientThread.start();
+
 class SensorDataResource(ModelResource):
 	class Meta:
 		queryset = SensorData.objects.all()
@@ -19,6 +78,9 @@ class StatisticsObject(object):
         setattr(self, 'usage_average', 3)
         setattr(self, 'usage_most_perc', 64)
         setattr(self, 'usage_least_perc', 23)
+        setattr(self, 'sample_latitude', 49.27688300)
+        setattr(self, 'sample_longitude', -122.914845000000010)
+
         if initial:
             self.update(initial)
 
@@ -38,13 +100,17 @@ class StatisticsObject(object):
 f = 0
 setting = StatisticsObject()
 class StatisticsResource(Resource):
+    # static
     usage_average = fields.IntegerField(attribute='usage_average')
     usage_most_perc = fields.IntegerField(attribute='usage_most_perc')
     usage_least_perc = fields.IntegerField(attribute='usage_least_perc')
+    sample_latitude = fields.FloatField(attribute='sample_latitude')
+    sample_longitude = fields.FloatField(attribute='sample_longitude')
+    # dynamic
+    test_value = fields.IntegerField(attribute='test_value')
+    random = fields.IntegerField(attribute='random')
     cost_current = fields.FloatField(attribute='cost_current')
     cost_projected_daily = fields.IntegerField(attribute='cost_projected_daily')
-    value = fields.IntegerField(attribute='value')
-    random = fields.IntegerField(attribute='random')
 
     class Meta:
         resource_name = 'statistics'
@@ -64,8 +130,25 @@ class StatisticsResource(Resource):
     def obj_get(self, request=None, key=None, **kwargs):
         global f, setting
         f += 1
-        setattr(setting, 'value', f)
+        setattr(setting, 'test_value', f)
         setattr(setting, 'random', randint(1, 1000))
         setattr(setting, 'cost_current', len(SensorData.objects.all()) * 0.01)
         setattr(setting, 'cost_projected_daily', randint(3600, 3750) + f)
         return setting
+
+        # indented to comment out
+        def alter_detail_data_to_serialize(self, request, data):
+                print("hit")
+                if request.GET.get('meta_only'):
+                        return {'meta': data['meta']}
+                elif request.GET.get('count_only'):
+                        return {'total_count': data['meta']['total_count']}
+                return {}
+
+        def alter_list_data_to_serialize(self, request, data):
+                print("hit")
+                if request.GET.get('meta_only'):
+                        return {'meta': data['meta']}
+                elif request.GET.get('count_only'):
+                        return {'total_count': data['meta']['total_count']}
+                return {}
