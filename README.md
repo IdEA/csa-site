@@ -7,10 +7,11 @@ Consumer Sustainability Analytics - Central IoT Server
 ```
 wget https://bootstrap.pypa.io/get-pip.py
 sudo python get-pip.py
-sudo pip install Django
+sudo pip install django==1.7.4
+sudo pip install paho-mqtt
 ```
 
-##### Starting the dev server
+##### Starting the dev server using django's builtin webserver
 ```
 mosquitto -p 12001
 python manage.py runserver 0.0.0.0:11000
@@ -25,6 +26,34 @@ python manage.py migrate
 ```
 python manage.py createsuperuser
 ```
+
+#### uWSGI with nginx
+```
+sudo mkdir -p /etc/uwsgi/sites
+cd /etc/uwsgi/sites
+sudo vim csa-site.ini
+
+```
+```
+[uwsgi]                                                                                                   │  1 Consumer Sustainability Analytics - Central IoT Server                                                   
+chdir = /home/steven/csa-site                                                                             │  2 ===========                                                                                              
+module = csasite.wsgi:application                                                                         │  3                                                                                                          
+                                                                                                          │  4 ### Contributing                                                                                         
+master = true                                                                                             │  5                                                                                                          
+processes = 5                                                                                             │  6 ##### Setting up Django for local development                                                            
+                                                                                                          │  7 ```                                                                                                      
+socket = /home/steven/csa-site/csasite.sock                                                               │  8 wget https://bootstrap.pypa.io/get-pip.py                                                                
+chmod-socket = 664                                                                                        │  9 sudo python get-pip.py                                                                                   
+vacuum = true  
+```
+
+#### Deploying
+```
+python manage.py collectstatic
+service uwsgi start
+```
+
+
 
 ##### Coding style
 https://docs.djangoproject.com/en/1.7/internals/contributing/writing-code/coding-style/
