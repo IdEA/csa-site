@@ -15,6 +15,7 @@ urlpatterns = patterns('',
 
    url(r'^admin/', include(admin.site.urls)),
    url(r'^api/', include(csa_api_v1.urls)),
-   url(r'^dash/', include('dashboard.urls')),
-   url(r'^$', MainView.as_view()),
+   url(r'^$', include('dashboard.urls')),
+   #url(r'^dash/', include('dashboard.urls')),
+   #url(r'^$', MainView.as_view()),
 )

@@ -37,9 +37,9 @@ class mqttThread(threading.Thread):
     def on_connect(self, client, userdata, flags, rc):
         print("Connected with result code "+str(rc))
         #self.client.subscribe("$SYS/#")
-        self.client.subscribe("dispenser")
-        self.client.subscribe("connCheck")
-        self.client.subscribe("action")
+        self.client.subscribe("dispenser/#")
+        self.client.subscribe("connCheck/#")
+        self.client.subscribe("action/#")
 
     # The callback for when a PUBLISH message is received from the server.
     def on_message(self, client, userdata, msg):
