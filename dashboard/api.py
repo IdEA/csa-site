@@ -151,8 +151,8 @@ class StatisticsResource(Resource):
         f += 1
         setattr(setting, 'test_value', f)
         setattr(setting, 'random', randint(1, 1000))
-        yesterday = timezone.now() - datetime.timedelta(days=1)
-        towelsUsedToday = SensorData.objects.filter(entry_date__gt=yesterday).count()
+        today = timezone.now().date()
+        towelsUsedToday = SensorData.objects.filter(entry_date=today).count()
         setattr(setting, 'daily_towels_used', towelsUsedToday)
         anHourAgo = timezone.now() - datetime.timedelta(hours=1)
         towelsUsedAnHourAgo = SensorData.objects.filter(entry_date__gt=anHourAgo).count()
