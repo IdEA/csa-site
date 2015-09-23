@@ -127,6 +127,7 @@ class StatisticsResource(Resource):
     test_value = fields.IntegerField(attribute='test_value')
     random = fields.IntegerField(attribute='random')
     daily_towels_used = fields.IntegerField(attribute='daily_towels_used')
+    hourly_towels_used = fields.IntegerField(attribute='hourly_towels_used')
     cost_current = fields.FloatField(attribute='cost_current')
     cost_projected_daily = fields.IntegerField(attribute='cost_projected_daily')
 
@@ -153,8 +154,12 @@ class StatisticsResource(Resource):
         yesterday = timezone.now() - datetime.timedelta(days=1)
         towelsUsedToday = SensorData.objects.filter(entry_date__gt=yesterday).count()
         setattr(setting, 'daily_towels_used', towelsUsedToday)
-        setattr(setting, 'cost_current', SensorData.objects.count() * 0.01)
-        setattr(setting, 'cost_projected_daily', randint(3600, 3750) + f)
+        anHourAgo = timezone.now() - datetime.timedelta(hours=1)
+        towelsUsedAnHourAgo = SensorData.objects.filter(entry_date__gt=anHourAgo).count()
+        setattr(setting, 'hourly_towels_used', towelsUsedAnHourAgo)
+        totalTowels = SensorData.objects.count()
+        setattr(setting, 'cost_current',  totalTowels * 0.01)
+        setattr(setting, 'cost_projected_daily', towelsUsedToday * 0.01)
         return setting
 
         # indented to comment out
