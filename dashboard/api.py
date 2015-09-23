@@ -9,6 +9,9 @@ from dashboard.models import SensorData
 import paho.mqtt.client as mqtt
 import threading
 
+from django.utils import timezone
+import datetime
+
 
 class mqttThread(threading.Thread):
     def __init__(self, threadID, client):
@@ -55,9 +58,11 @@ class mqttThread(threading.Thread):
                         self.pulls += 1
                     elif msg.payload == "alive":
                         print("Alive: %s" % topics[1])
+                        self.dispenser[topics[1]] = "alive"
                         #getattr(self.dispenser.
                     elif msg.payload == "dead":
                         print("Dead: %s" % topics[1])
+                        self.dispenser[topics[1]] = "alive"
                 elif len(topics) == 3:
                     if topics[2] == "status":
                         print("Recieved status update from" % topics[1])
@@ -121,6 +126,7 @@ class StatisticsResource(Resource):
     # dynamic
     test_value = fields.IntegerField(attribute='test_value')
     random = fields.IntegerField(attribute='random')
+    daily_towels_used = fields.IntegerField(attribute='daily_towels_used')
     cost_current = fields.FloatField(attribute='cost_current')
     cost_projected_daily = fields.IntegerField(attribute='cost_projected_daily')
 
@@ -144,6 +150,9 @@ class StatisticsResource(Resource):
         f += 1
         setattr(setting, 'test_value', f)
         setattr(setting, 'random', randint(1, 1000))
+        yesterday = timezone.now() - datetime.timedelta(days=1)
+        towelsUsedToday = SensorData.objects.filter(entry_date__gt=yesterday).count()
+        setattr(setting, 'daily_towels_used', towelsUsedToday)
         setattr(setting, 'cost_current', SensorData.objects.count() * 0.01)
         setattr(setting, 'cost_projected_daily', randint(3600, 3750) + f)
         return setting
